@@ -21,6 +21,7 @@ const scores = [0,0];
 let currentScore = 0;
 //Active player is player 0 intially,used to change player
 let activePlayer = 0;
+let currPlaying = true;
 
 //Reset Function
 const resetGame = function(){
@@ -32,6 +33,7 @@ P0.classList.add("player--active");
 P1.classList.remove("player--active");
 currScoreP1.textContent = 0;
 currScoreP2.textContent = 0;
+document.querySelector(`.player--${activePlayer}`).classList.remove('player--winner');
 }
 resetGame();
 
@@ -46,6 +48,7 @@ const switchPlayer = function(){
 }
 //Event listener for Dice roll click
 btnRoll.addEventListener('click',function(){
+    if(currPlaying){
     //1.Generate random dice roll
     const diceRoll = Math.trunc(Math.random()*6) + 1;
     //2.Display Dice Img
@@ -63,6 +66,7 @@ btnRoll.addEventListener('click',function(){
         document.getElementById(`current--${activePlayer}`).textContent = currentScore;
         //currScoreP1.textContent = currentScore;
     }
+}
 });
 
 //Event Listener for Button New Game click
@@ -70,17 +74,19 @@ btnNew.addEventListener('click',resetGame);
 
 //Event Listener for Button Hold Click
 btnHold.addEventListener('click',function(){
+    if(currPlaying){
     //1.Add current score to score of active Players
     scores[activePlayer] += currentScore;
     document.getElementById(`score--${activePlayer}`).textContent = scores[activePlayer];
     //2.Check score is >=100 if not switch player
     if(scores[activePlayer] >= 100){
+        currPlaying = false; 
         document.querySelector(`.player--${activePlayer}`).classList.add('player--winner');
         document.querySelector(`.player--${activePlayer}`).classList.remove('player--active');
-        diceImg.classList.add('hidden');
-        
+        diceImg.classList.add('hidden');       
     }
     else{ 
     switchPlayer();
     }
+}
 });
